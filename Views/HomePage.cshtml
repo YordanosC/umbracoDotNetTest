@@ -1,0 +1,68 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = null;
+}
+
+<style type="text/css">
+    body{
+        font-size: 14pt;
+    }
+
+    #search {
+        width: 80%;
+        margin: auto;
+        display: block;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    #searchin {
+        float: left;
+        width: 90%;
+        height: 30px;
+    }
+
+</style>
+<body>
+
+    <div id="search">
+            <input type="text" id="searchin" placeholder="Search..."  />
+    </div>
+    <br />    <br />
+    <div id="display"></div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var search=null;
+            $('#searchin').keyup(function(){
+                var name = $('#searchin').val();
+                search= name;
+                console.log(name);
+                // Validate if "name" is empty.
+                if (name == "") {
+                    // Assign an empty value to the "display" div in "search".
+                    $("#display").html("");
+                }
+                else{
+                    // Initiate an AJAX request.
+                    $.ajax({
+                        // Set the AJAX type as "POST".
+                        type: "POST",
+                        // Send data to api.
+                        url: "http://localhost:8418/Umbraco/Api/blogs/GetSearchBlogs",
+                        data: {'search':search},
+                        // If a result is found, this function will be called.
+                        success: function (html) {
+                            document.getElementById("display").innerHTML = JSON.stringify(html);
+                        }
+                    });
+                }
+            });
+        })
+
+
+    </script>
+</body>
